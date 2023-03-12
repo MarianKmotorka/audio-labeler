@@ -55,7 +55,6 @@ export const TrackWithHandle = ({ onDrag, duration, currentTime, editingLabel, o
         overflow="hidden"
         height={"100%"}
         direction="row-reverse"
-        sx={{ transition: "width 0.4s" }}
       >
         <Box
           ref={handleRef}

@@ -1,5 +1,5 @@
 import { Box, Button, Chip, Stack } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Label } from "./Label";
 import { TrackWithHandle } from "./TrackWithHandle";
 import { formatAudioTime } from "./utils";
@@ -21,6 +21,8 @@ export const AudioLabeler = ({ src }: Props) => {
     return () => clearTimeout(id);
   }, [audioEl.current?.readyState, (audioEl.current as any)?.loadedmetadata]);
 
+  useUpdateAudioTime(setCurrentTime, audioEl);
+
   const handlePlayPause = async () => {
     if (isPlaying) {
       audioEl.current?.pause();
@@ -40,15 +42,13 @@ export const AudioLabeler = ({ src }: Props) => {
     setEditingLable(newLabel);
   };
 
+  const setAudioTime = (time: number) => {
+    audioEl.current!.currentTime = time;
+  };
+
   return (
     <Box margin={5}>
-      <audio
-        onTimeUpdate={() => setCurrentTime(audioEl.current!.currentTime)}
-        ref={audioEl}
-        src={src}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-      ></audio>
+      <audio ref={audioEl} src={src} onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)}></audio>
       <Button variant="outlined" onClick={handlePlayPause}>
         {isPlaying ? "Pause" : "Play"}
       </Button>
@@ -61,7 +61,7 @@ export const AudioLabeler = ({ src }: Props) => {
         onEditingLabelChange={setEditingLable}
         duration={duration}
         currentTime={currentTime}
-        onDrag={(time) => (audioEl.current!.currentTime = time)}
+        onDrag={setAudioTime}
       />
 
       <Stack direction={"row"} mt={1} justifyContent="space-between">
@@ -71,3 +71,17 @@ export const AudioLabeler = ({ src }: Props) => {
     </Box>
   );
 };
+
+function useUpdateAudioTime(setCurrentTime: (time: number) => void, audioEl: React.RefObject<HTMLAudioElement>) {
+  const animationFrameRequest = useRef<number>(-1);
+
+  const updateAudioTime = useCallback(() => {
+    setCurrentTime(audioEl.current?.currentTime || 0);
+    animationFrameRequest.current = requestAnimationFrame(updateAudioTime);
+  }, [setCurrentTime, audioEl, animationFrameRequest]);
+
+  useEffect(() => {
+    animationFrameRequest.current = requestAnimationFrame(updateAudioTime);
+    return () => cancelAnimationFrame(animationFrameRequest.current);
+  }, [updateAudioTime, animationFrameRequest]);
+}
