@@ -1,7 +1,8 @@
-import { Box } from "@mui/material";
+import { Box, Chip, Stack } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import ArrowCircleDown from "@mui/icons-material/ArrowCircleDownTwoTone";
 import { useEffect, useState } from "react";
+import { formatAudioTime } from "./utils";
 
 export type Label = {
   start: number;
@@ -66,25 +67,29 @@ export const LabelComponent = ({ start, end, name, wrapperRef, duration, onChang
       justifyContent="space-between"
     >
       <Box height="100%" width={2} bgcolor={blue[200]} position="relative">
-        <Box
+        <Stack
+          alignItems="center"
           position="absolute"
-          top={-20}
+          top={-54}
           sx={{ cursor: "pointer", transform: "translateX(-50%)" }}
           onMouseDown={() => setHandleDown("start")}
         >
+          <Chip label={formatAudioTime(start)} sx={{ userSelect: "none", cursor: "pointer" }} />
           <ArrowCircleDown />
-        </Box>
+        </Stack>
       </Box>
       <Box height="100%" width={2} bgcolor={blue[200]} position="relative">
-        <Box
+        <Stack
+          alignItems="center"
           position="absolute"
-          top={-20}
+          top={-54}
           right={0}
           sx={{ cursor: "pointer", transform: "translateX(50%)" }}
           onMouseDown={() => setHandleDown("end")}
         >
+          <Chip label={formatAudioTime(end)} sx={{ userSelect: "none", cursor: "pointer" }} />
           <ArrowCircleDown />
-        </Box>
+        </Stack>
       </Box>
     </Box>
   );
