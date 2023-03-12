@@ -26,8 +26,10 @@ export const AudioLabeler = ({ src }: Props) => {
   const handlePlayPause = async () => {
     if (isPlaying) {
       audioEl.current?.pause();
+      setIsPlaying(false);
     } else {
       await audioEl.current?.play();
+      setIsPlaying(true);
     }
   };
 
@@ -46,7 +48,7 @@ export const AudioLabeler = ({ src }: Props) => {
 
   return (
     <Box margin={5} mt={10}>
-      <audio loop ref={audioEl} src={src} onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)} />
+      <audio loop ref={audioEl} src={src} />
 
       <TrackWithHandle
         editingLabel={editingLabel}
@@ -54,6 +56,7 @@ export const AudioLabeler = ({ src }: Props) => {
         duration={duration}
         currentTime={currentTime}
         setCurrentTime={setAudioTime}
+        audioSrc={src}
       />
 
       <Stack direction={"row"} mt={1} justifyContent="space-between">

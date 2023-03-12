@@ -58,7 +58,8 @@ export const LabelComponent = ({ start, end, name, wrapperRef, duration, onChang
   return (
     <Box
       position="absolute"
-      bgcolor={blue[200] + "66"}
+      zIndex={10}
+      bgcolor={blue[400] + "66"}
       top={0}
       bottom={0}
       left={left}
@@ -66,7 +67,7 @@ export const LabelComponent = ({ start, end, name, wrapperRef, duration, onChang
       display="flex"
       justifyContent="space-between"
     >
-      <Box height="100%" width={2} bgcolor={blue[200]} position="relative">
+      <Box height="100%" width={2} bgcolor={blue[400]} position="relative">
         <Stack
           alignItems="center"
           position="absolute"
@@ -78,7 +79,7 @@ export const LabelComponent = ({ start, end, name, wrapperRef, duration, onChang
           <ArrowCircleDown />
         </Stack>
       </Box>
-      <Box height="100%" width={2} bgcolor={blue[200]} position="relative">
+      <Box height="100%" width={2} bgcolor={blue[400]} position="relative">
         <Stack
           alignItems="center"
           position="absolute"
