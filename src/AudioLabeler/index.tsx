@@ -38,7 +38,7 @@ export const AudioLabeler = ({ src }: Props) => {
       setEditingLable(undefined);
       return;
     }
-    const newLabel: Label = { name: "Label 1", start: currentTime, end: Math.min(currentTime + 3, duration) };
+    const newLabel: Label = { name: "Label 1", start: currentTime, end: Math.min(currentTime + 8, duration) };
     setEditingLable(newLabel);
   };
 

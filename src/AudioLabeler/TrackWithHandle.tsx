@@ -26,8 +26,6 @@ export const TrackWithHandle = ({
   const handleRef = useRef<HTMLDivElement>();
   const wrapperRef = useRef<HTMLDivElement>();
 
-  const wavesurferContainer = useWaveSurfer(audioSrc);
-
   useEffect(() => {
     const handleMouseUp = () => setMouseDown(false);
     document.addEventListener("mouseup", handleMouseUp);
@@ -56,7 +54,7 @@ export const TrackWithHandle = ({
   return (
     <>
       <Box ref={wrapperRef} height={100} onMouseMove={handleDrag} position="relative" zIndex={1}>
-        <Box ref={wavesurferContainer} zIndex={1} position="absolute" top={0} height="100%" left={0} width="100%" />
+        <Waveform audioSrc={audioSrc} />
 
         {editingLabel && (
           <LabelComponent
@@ -91,7 +89,7 @@ export const TrackWithHandle = ({
   );
 };
 
-const useWaveSurfer = (audioSrc: string) => {
+const Waveform = ({ audioSrc }: { audioSrc: string }) => {
   const wavesurferContainer = useRef<HTMLDivElement>();
 
   useEffect(() => {
@@ -109,5 +107,5 @@ const useWaveSurfer = (audioSrc: string) => {
     };
   }, [wavesurferContainer, audioSrc]);
 
-  return wavesurferContainer;
+  return <Box ref={wavesurferContainer} zIndex={1} position="absolute" top={0} height="100%" left={0} width="100%" />;
 };
