@@ -1,18 +1,24 @@
 import { Box, Stack } from "@mui/material";
-import { blue, blueGrey, green, grey, red } from "@mui/material/colors";
+import { green, grey } from "@mui/material/colors";
 import shadows from "@mui/material/styles/shadows";
 import { useEffect, useRef, useState } from "react";
 import { Label, LabelComponent } from "./Label";
 
 type Props = {
-  onDrag: (newTime: number) => void;
   duration: number;
   currentTime: number;
   editingLabel?: Label;
+  setCurrentTime: (newTime: number) => void;
   onEditingLabelChange: (newLabel: Label) => void;
 };
 
-export const TrackWithHandle = ({ onDrag, duration, currentTime, editingLabel, onEditingLabelChange }: Props) => {
+export const TrackWithHandle = ({
+  duration,
+  currentTime,
+  editingLabel,
+  setCurrentTime,
+  onEditingLabelChange,
+}: Props) => {
   const [mouseDown, setMouseDown] = useState(false);
   const percentagePlayed = duration === 0 ? 0 : (currentTime / duration) * 100;
   const handleRef = useRef<HTMLDivElement>();
@@ -26,23 +32,32 @@ export const TrackWithHandle = ({ onDrag, duration, currentTime, editingLabel, o
     };
   }, []);
 
+  useEffect(() => {
+    if (!editingLabel) {
+      return;
+    }
+    if (currentTime < editingLabel.start || currentTime >= editingLabel.end) {
+      setCurrentTime(editingLabel.start);
+    }
+  }, [editingLabel, currentTime, setCurrentTime]);
+
   const handleDrag = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (!mouseDown || !wrapperRef.current) return;
     const wrapperOffsetX = wrapperRef.current.getBoundingClientRect().left;
     const wrapperWidth = wrapperRef.current.clientWidth;
     const newTime = duration * ((e.clientX - wrapperOffsetX) / wrapperWidth);
-    onDrag(newTime);
+    setCurrentTime(newTime);
   };
 
   return (
     <Box
-      borderRadius={4}
       boxShadow={shadows[2]}
       ref={wrapperRef}
       height={100}
       bgcolor={grey[200]}
       onMouseMove={handleDrag}
       position="relative"
+      borderRadius={3}
     >
       {editingLabel && (
         <LabelComponent {...editingLabel} wrapperRef={wrapperRef} duration={duration} onChange={onEditingLabelChange} />
@@ -51,7 +66,7 @@ export const TrackWithHandle = ({ onDrag, duration, currentTime, editingLabel, o
       <Stack
         width={`${percentagePlayed}%`}
         bgcolor={green[100]}
-        borderRadius={1}
+        sx={{ borderRadius: "12px 4px 4px 12px" }}
         overflow="hidden"
         height={"100%"}
         direction="row-reverse"

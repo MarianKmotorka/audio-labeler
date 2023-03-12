@@ -1,4 +1,4 @@
-import { Box, Button, Chip, Stack } from "@mui/material";
+import { Box, Button, ButtonGroup, Chip, Stack } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Label } from "./Label";
 import { TrackWithHandle } from "./TrackWithHandle";
@@ -36,9 +36,7 @@ export const AudioLabeler = ({ src }: Props) => {
       setEditingLable(undefined);
       return;
     }
-    const middleTime = duration / 2;
-    const offset = duration / 5;
-    const newLabel: Label = { name: "Label 1", start: middleTime - offset, end: middleTime + offset };
+    const newLabel: Label = { name: "Label 1", start: currentTime, end: Math.min(currentTime + 2, duration) };
     setEditingLable(newLabel);
   };
 
@@ -47,27 +45,26 @@ export const AudioLabeler = ({ src }: Props) => {
   };
 
   return (
-    <Box margin={5}>
-      <audio ref={audioEl} src={src} onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)}></audio>
-      <Button variant="outlined" onClick={handlePlayPause}>
-        {isPlaying ? "Pause" : "Play"}
-      </Button>
-      <Button variant="outlined" onClick={handleAddCancelLabel}>
-        {editingLabel ? "Cancel add label" : "Add label"}
-      </Button>
+    <Box margin={5} mt={10}>
+      <audio loop ref={audioEl} src={src} onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)} />
 
       <TrackWithHandle
         editingLabel={editingLabel}
         onEditingLabelChange={setEditingLable}
         duration={duration}
         currentTime={currentTime}
-        onDrag={setAudioTime}
+        setCurrentTime={setAudioTime}
       />
 
       <Stack direction={"row"} mt={1} justifyContent="space-between">
         <Chip label={formatAudioTime(currentTime)} variant="outlined" />
         <Chip label={formatAudioTime(duration)} variant="outlined" />
       </Stack>
+
+      <ButtonGroup variant="outlined" sx={{ mt: 1 }}>
+        <Button onClick={handlePlayPause}>{isPlaying ? "Pause" : "Play"}</Button>
+        <Button onClick={handleAddCancelLabel}>{editingLabel ? "Cancel add label" : "Add label"}</Button>
+      </ButtonGroup>
     </Box>
   );
 };
