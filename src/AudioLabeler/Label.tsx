@@ -1,5 +1,5 @@
-import { Box, Chip } from "@mui/material";
-import { blue, grey } from "@mui/material/colors";
+import { Box } from "@mui/material";
+import { blue } from "@mui/material/colors";
 import ArrowCircleDown from "@mui/icons-material/ArrowCircleDownTwoTone";
 import { useEffect, useState } from "react";
 
@@ -19,11 +19,6 @@ type Props = {
 
 export const LabelComponent = ({ start, end, name, wrapperRef, duration, onChange }: Props) => {
   const [handleDown, setHandleDown] = useState<"start" | "end">();
-  if (!wrapperRef.current) return null;
-
-  const wrapperWidth = wrapperRef.current.clientWidth;
-  const left = (start / duration) * wrapperWidth;
-  const width = ((end - start) / duration) * wrapperWidth;
 
   useEffect(() => {
     const handleMouseUp = () => setHandleDown(undefined);
@@ -53,6 +48,11 @@ export const LabelComponent = ({ start, end, name, wrapperRef, duration, onChang
       document?.removeEventListener("mousemove", handleDrag);
     };
   }, [handleDown]);
+
+  if (!wrapperRef.current) return null;
+  const wrapperWidth = wrapperRef.current.clientWidth;
+  const left = (start / duration) * wrapperWidth;
+  const width = ((end - start) / duration) * wrapperWidth;
 
   return (
     <Box
