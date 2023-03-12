@@ -36,7 +36,7 @@ export const AudioLabeler = ({ src }: Props) => {
       setEditingLable(undefined);
       return;
     }
-    const newLabel: Label = { name: "Label 1", start: currentTime, end: Math.min(currentTime + 2, duration) };
+    const newLabel: Label = { name: "Label 1", start: currentTime, end: Math.min(currentTime + 3, duration) };
     setEditingLable(newLabel);
   };
 
@@ -61,9 +61,13 @@ export const AudioLabeler = ({ src }: Props) => {
         <Chip label={formatAudioTime(duration)} variant="outlined" />
       </Stack>
 
-      <ButtonGroup variant="outlined" sx={{ mt: 1 }}>
-        <Button onClick={handlePlayPause}>{isPlaying ? "Pause" : "Play"}</Button>
-        <Button onClick={handleAddCancelLabel}>{editingLabel ? "Cancel add label" : "Add label"}</Button>
+      <ButtonGroup sx={{ mt: 1 }}>
+        <Button variant="contained" onClick={handlePlayPause}>
+          {isPlaying ? "Pause" : "Play"}
+        </Button>
+        <Button variant="outlined" onClick={handleAddCancelLabel}>
+          {editingLabel ? "Cancel label" : "Add label"}
+        </Button>
       </ButtonGroup>
     </Box>
   );
